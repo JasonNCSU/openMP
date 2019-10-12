@@ -21,8 +21,8 @@ void printMessageWithtime(const char * msg, double time){
 int main(void) {
 
 
-    // const char * fname = "../datasets/facebook/facebook_combined.txt";
-    const char * fname = "../datasets/test/test.txt";
+    const char * fname = "../datasets/facebook/facebook_combined.txt";
+    // const char * fname = "../datasets/test/test.txt";
     // const char * fname = "../datasets/wiki-vote/wiki-Vote.txt";
     // const char * fname = "../datasets/RMAT/RMAT22";
     
@@ -33,7 +33,6 @@ int main(void) {
     // get |v| |e| count do we can allocate our edge array and vertex array
 
     loadEdgeArrayInfo(fname, &numOfVertices, &numOfEdges);
-    printf("Edges : %d Vertices: %d\n", numOfEdges, numOfVertices);
 
     // allocate our edge array and vertex array
     struct Edge * edgeArray = newEdgeArray(numOfEdges);
@@ -43,9 +42,8 @@ int main(void) {
     // populate the edge array from file
     loadEdgeArray(fname, edgeArray);
 
-
-    // if you want to check
-    //printEdgeArray(edgeArray, numOfEdges); // print the edge list unsorted
+    //print out #edges and #vertices
+    printf("Edges : %d Vertices: %d\n", numOfEdges, numOfVertices);
 
     /*the function you need to optimize*/
     Start(timer);
@@ -55,11 +53,9 @@ int main(void) {
     printMessageWithtime("Time Sorting (Seconds)",Seconds(timer));
     /*the function you need to optimize*/
 
-    printf("Sorted Edge : %d | Unsorted Edge : %d\n", sortedEdgeArray[0].src, edgeArray[0].src);
-    printf("Sorted Edge : %d | Unsorted Edge : %d\n", sortedEdgeArray[1].src, edgeArray[1].src);
-
     // if you want to check
-    printEdgeArray(sortedEdgeArray, numOfEdges);
+    //printEdgeArray(edgeArray, numOfEdges); // print the edge list unsorted
+    //printEdgeArray(sortedEdgeArray, numOfEdges);
 
     mapVertices(vertexArray, sortedEdgeArray, numOfVertices, numOfEdges);
 
