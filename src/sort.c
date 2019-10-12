@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <math.h>
-// #include <omp.h>
+#include <omp.h>
 
 #include "../include/sort.h"
 #include "../include/edgelist.h"
