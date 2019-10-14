@@ -55,14 +55,15 @@ void radixSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int n
     //edges is array given
     //numVertices is largest number of digits
     //numEdges is number of elements in array
-
     //Each key in A[1..n] is a d-digit integer
     //Digits are numbered 1 to d from right to left
     //Finding number of digits, this is based on numVertices
     int digits;
     int temp;
-
-    prettyPrint("Edge array Before radix sorting: { ", edges, numEdges);
+    int i;
+    int j;
+    int k;
+    //prettyPrint("Edge array Before radix sorting: { ", edges, numEdges);
 
     if (numVertices < 100000) {
         if (numVertices < 100) {
@@ -87,41 +88,53 @@ void radixSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int n
             }
         }
     }
-
     //for 1 to #digits
-    for (int j = 1; j <= digits; j++) {
+    for (j = 1; j <= digits; j++) {
         //key, it is number at digit place j, that's why it's size 10, 0->9
         int count[10] = {0};
 
         //Store the count of 'keys' in count
-        for (int i = 0; i < numEdges; i++) {
+#pragma omp parallel
+{
+        #pragma omp default(none) shared(numEdges, j, edges, count) private(i, temp) num_threads(16)
+        for (i = 0; i < numEdges; i++) {
             //count[j-th digit of edges array]
-            temp = edges[i].src;
-            temp /= (int)pow(10.0, (double) j-1);
-            temp %= 10;
-            count[temp]++;
+            //temp = edges[i].src;
+            //temp /= (int)pow(10.0, (double) j-1);
+            //temp %= 10;
+            //count[temp]++;
+            count[(edges[i].src / (int)pow(10.0, (double) j-1)) % 10]++;
         }
+}
 
-        for (int k = 1; k < 10; k++) {
+
+        for (k = 1; k < 10; k++) {
             count[k] += count[k-1];
         }
 
         //Build new resulting array by checking
         //new position of A[i] from count[k]
-        for (int i = numEdges - 1; i >= 0; i--) {
+#pragma omp parallel //start of parallel region
+{
+        #pragma omp parallel for default(none) shared(numEdges, j, edges, edges_sorted, count) private(i, temp) num_threads(16)
+        for (i = numEdges - 1; i >= 0; i--) {
             temp = edges[i].src;
             temp /= (int)pow(10.0, (double) j-1);
             temp %= 10;
             edges_sorted[count[temp] - 1] = edges[i];
             count[temp]--;
         }
+}
 
-        for (int i = 0; i < numEdges; i++) {
+#pragma omp parallel
+{
+        #pragma omp default(none) shared(numEdges, edges, edges_sorted) private(i) num_threads(16)
+        for (i = 0; i < numEdges; i++) {
             edges[i] = edges_sorted[i];
         }
+}
     }
-
-    prettyPrint("Edge array after radix sorting : { ", edges_sorted, numEdges);
+    //prettyPrint("Edge array after radix sorting : { ", edges_sorted, numEdges);
 }
 
 void prettyPrint(char * textDisp, struct Edge * edges_sorted, int numEdges) {

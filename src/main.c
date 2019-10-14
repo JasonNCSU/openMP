@@ -23,7 +23,7 @@ int main(void) {
 
     const char * fname = "../datasets/facebook/facebook_combined.txt";
     // const char * fname = "../datasets/test/test.txt";
-    // const char * fname = "../datasets/wiki-vote/wiki-Vote.txt";
+    // const char * fname = "../datasets/wiki-vote/wiki.txt";
     // const char * fname = "../datasets/RMAT/RMAT22";
     
     int numOfVertices = 0;
@@ -45,6 +45,9 @@ int main(void) {
     //print out #edges and #vertices
     printf("Edges : %d Vertices: %d\n", numOfEdges, numOfVertices);
 
+    //if you want to check
+    //printEdgeArray(edgeArray, numOfEdges); // print the edge list unsorted
+
     /*the function you need to optimize*/
     Start(timer);
     radixSortEdgesBySource(sortedEdgeArray, edgeArray, numOfVertices, numOfEdges);
@@ -54,7 +57,6 @@ int main(void) {
     /*the function you need to optimize*/
 
     // if you want to check
-    //printEdgeArray(edgeArray, numOfEdges); // print the edge list unsorted
     //printEdgeArray(sortedEdgeArray, numOfEdges);
 
     mapVertices(vertexArray, sortedEdgeArray, numOfVertices, numOfEdges);
