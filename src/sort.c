@@ -53,7 +53,7 @@ void countSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int n
 void radixSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int numVertices, int numEdges) {
     //edges_sorted is sorted array
     //edges is array given
-    //numVertices is largest number of digits
+    //numVertices is largest number
     //numEdges is number of elements in array
     //Each key in A[1..n] is a d-digit integer
     //Digits are numbered 1 to d from right to left
@@ -88,25 +88,24 @@ void radixSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int n
             }
         }
     }
+
+    omp_set_num_threads(16);
+
     //for 1 to #digits
     for (j = 1; j <= digits; j++) {
         //key, it is number at digit place j, that's why it's size 10, 0->9
         int count[10] = {0};
 
         //Store the count of 'keys' in count
-#pragma omp parallel
-{
-        #pragma omp default(none) shared(numEdges, j, edges, count) private(i, temp) num_threads(16)
         for (i = 0; i < numEdges; i++) {
             //count[j-th digit of edges array]
-            //temp = edges[i].src;
-            //temp /= (int)pow(10.0, (double) j-1);
-            //temp %= 10;
-            //count[temp]++;
-            count[(edges[i].src / (int)pow(10.0, (double) j-1)) % 10]++;
-        }
-}
+            temp = edges[i].src;
+            temp /= (int)pow(10.0, (double) j-1);
+            temp %= 10;
 
+            count[temp]++;
+            //count[(edges[i].src / (int)pow(10.0, (double) j-1)) % 10]++;
+        }
 
         for (k = 1; k < 10; k++) {
             count[k] += count[k-1];
@@ -114,9 +113,7 @@ void radixSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int n
 
         //Build new resulting array by checking
         //new position of A[i] from count[k]
-#pragma omp parallel //start of parallel region
-{
-        #pragma omp parallel for default(none) shared(numEdges, j, edges, edges_sorted, count) private(i, temp) num_threads(16)
+        #pragma omp parallel for default(none) shared(numEdges, j, edges, edges_sorted, count) private(i, temp)
         for (i = numEdges - 1; i >= 0; i--) {
             temp = edges[i].src;
             temp /= (int)pow(10.0, (double) j-1);
@@ -124,15 +121,11 @@ void radixSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int n
             edges_sorted[count[temp] - 1] = edges[i];
             count[temp]--;
         }
-}
 
-#pragma omp parallel
-{
-        #pragma omp default(none) shared(numEdges, edges, edges_sorted) private(i) num_threads(16)
+        #pragma omp parallel for default(none) shared(numEdges, edges_sorted, edges) private(i)
         for (i = 0; i < numEdges; i++) {
             edges[i] = edges_sorted[i];
         }
-}
     }
     //prettyPrint("Edge array after radix sorting : { ", edges_sorted, numEdges);
 }
