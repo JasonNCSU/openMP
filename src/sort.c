@@ -63,7 +63,6 @@ void radixSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int n
     int i;
     int j;
     int k;
-    //prettyPrint("Edge array Before radix sorting: { ", edges, numEdges);
 
     if (numVertices < 100000) {
         if (numVertices < 100) {
@@ -127,13 +126,4 @@ void radixSortEdgesBySource(struct Edge *edges_sorted, struct Edge *edges, int n
             edges[i] = edges_sorted[i];
         }
     }
-    //prettyPrint("Edge array after radix sorting : { ", edges_sorted, numEdges);
-}
-
-void prettyPrint(char * textDisp, struct Edge * edges_sorted, int numEdges) {
-    printf(textDisp);
-    for (int i = 0; i < numEdges; i++) {
-        printf(" %d ", edges_sorted[i].src);
-    }
-    printf("} \n ");
 }

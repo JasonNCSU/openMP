@@ -21,10 +21,14 @@ void printMessageWithtime(const char * msg, double time){
 int main(void) {
 
 
-    // const char * fname = "../datasets/facebook/facebook_combined.txt";
     // const char * fname = "../datasets/test/test.txt";
     // const char * fname = "../datasets/wiki-vote/wiki.txt";
-    const char * fname = "../datasets/RMAT/RMAT22";
+    // const char * fname = "../datasets/facebook/facebook_combined.txt";
+    const char * fname = "../datasets/RMAT/RMAT18";
+    // const char * fname = "../datasets/RMAT/RMAT19";
+    // const char * fname = "../datasets/RMAT/RMAT20";
+    // const char * fname = "../datasets/RMAT/RMAT21";
+    // const char * fname = "../datasets/RMAT/RMAT22";
     
     int numOfVertices = 0;
     int numOfEdges = 0;
